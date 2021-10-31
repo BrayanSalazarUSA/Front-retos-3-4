@@ -7,15 +7,13 @@ function editarRegistro(llaveRegistro) {
     let datos = {
         id: llaveRegistro
     }
-    console.log("sakjdhasd")
-    console.log(datos.id)
 
     //convierte el objeto javascript a json antes de agregarlo a los datos de la petición
     let datosPeticion = JSON.stringify(datos);
 
     $.ajax({
         // la URL para la petición (url: "url al recurso o endpoint")
-        url: "http://localhost:8080/api/Reservation/all",
+        url: "http://localhost:8080/api/Reservation/" +llaveRegistro,
 
         // la información a enviar
         // (también es posible utilizar una cadena de datos)
@@ -35,13 +33,15 @@ function editarRegistro(llaveRegistro) {
         success: function (respuesta) {
             //escribe en la consola del desarrollador para efectos de depuración
             console.log(respuesta);
+
             $("#mensajes").show(1000);
             $("#mensajes").html("Información recuperada...");
             $("#mensajes").hide(1000);
-            editarRespuesta(respuesta, llaveRegistro);
             activaEditar();
-            armaListaCabañas(respuesta);
-            armaListaClientes(respuesta);
+            editarRespuesta(respuesta);
+            listarCabañas(respuesta);
+            listarClientes(respuesta);
+            
         },
 
         // código a ejecutar si la petición falla;
@@ -55,88 +55,96 @@ function editarRegistro(llaveRegistro) {
     });
 }
 
-function activaEditar(){
-    $("#nuevo").show(500);
-    $("#startDate").focus();
-    $("#editar").hide();
-    $("#nuevoRegistro").hide(500)
-    $("#listado").hide(500);
-    listarClientes();
-    listarCabañas();
+/* 
+    Esta función se encarga de recorrer el listado de datos 'items' recibido como parametro,
+    construir una tabla html en la variable javascript 'tabla',
+    acceder al elemento elemento identificado con el id 'listado'
+    y modificar su html agregando el contenido de la variable 'tabla'.
+    
+*/
+function editarRespuesta(items) {
+    console.log(items.idReservation)
+    console.log(items.startDate)
+    console.log(items.devolutionDate)
+    console.log(items.cabin.name)
+    console.log(items.client.name)
+
+    $("#idReservation").val(items.idReservation);
+    $("#startDate").val(items.startDate);
+    $("#devolutionDate").val(items.devolutionDate);
+    $("#client").val(items.client.name);
+    $("#cabin").val(items.cabin);
 }
 
-function armaListaClientes(items) {
-    $("#listado").html("");
-    $("#listado").show(500);
-    //define variable javascript con la definicion inicial de la tabla, la primera fila y los
-    //encabezados o títulos de la tabla
-    var lista = ` <option value="">--Selecciona un Cliente--</option>`;
-                  
-    //recorre el arreglo de 'items' y construye dinamicamente la fila de datos de la tabla
-    for (var i=0; i < items.length; i++) {
-        lista +=`<option value="${items[i].idClient}">${items[i].name}</option>`;
+//Esta función ejecuta la petición asincrona al servidor de Oracle, envia una
+//petición al ws de tipo PUT
+function actualizar() {
+
+    //crea un objeto javascript
+    let datos = {
+        idReservation: $("#idReservation").val(),
+        startDate :$("#startDate").val(),
+        devolutionDate :$("#devolutionDate").val(),
+        client:{"idClient":$("#client").val()},
+        cabin:{"id":$("#cabin").val()}
     }
 
-    //accede al elemento con id 'listado' y adiciona la tabla de datos a su html
-    $("#client").html(lista);
-}
+    //convierte el objeto javascript a json antes de agregarlo a los datos de la petición
+    let datosPeticion = JSON.stringify(datos);
+    console.log("Este es el jsno: " +datosPeticion)
 
-function listarClientes() {
-    $.ajax({
-        // la URL para la petición (url: "url al recurso o endpoint")
-        url: "http://localhost:8080/api/Client/all",
-        
-        // la información a enviar
-        // (también es posible utilizar una cadena de datos)
-        //si el metodo del servicio recibe datos, es necesario definir el parametro adicional
-        //data : { id : 1, ...},
+        $.ajax({
+            // la URL para la petición (url: "url al recurso o endpoint")
+            url: "http://localhost:8080/api/Reservation/update",
 
-        // especifica el tipo de petición http: POST, GET, PUT, DELETE
-        type: 'GET',
+            // la información a enviar
+            // (también es posible utilizar una cadena de datos)
+            //si el metodo del servicio recibe datos, es necesario definir el parametro adicional
+            data: datosPeticion,
 
-        // el tipo de información que se espera de respuesta
-        dataType: 'json',
+            // especifica el tipo de petición http: POST, GET, PUT, DELETE
+            type: 'PUT',
 
-        // código a ejecutar si la petición es satisfactoria;
-        // la respuesta es pasada como argumento a la función
-        success: function (respuesta) {
-            //escribe en la consola del desarrollador para efectos de depuración
-            //console.log(respuesta);
+            contentType: "application/JSON",
 
-            //recibe el arreglo 'items' de la respuesta a la petición
-            armaListaClientes(respuesta);
-        },
+            // el tipo de información que se espera de respuesta
+            //dataType: 'json',
 
-        // código a ejecutar si la petición falla;
-        // son pasados como argumentos a la función
-        // el objeto de la petición en crudo y código de estatus de la petición
-        error: function (xhr, status) {
-            $("#mensajes").html("Ocurrio un problema al ejecutar la petición..." + status);
-            //$("#mensajes").hide(1000);
-        },
+            // código a ejecutar si la petición es satisfactoria;
+            // la respuesta es pasada como argumento a la función
+            success: function (respuesta) {
+                //escribe en la consola del desarrollador para efectos de depuración
+                
+                console.log(respuesta);
+                $("#mensajes").show(1000);
+                $("#mensajes").html("Registro actualizado...");
+                $("#mensajes").hide(1000);
+                listar();
+                estadoInicial();
+            },
 
-        // código a ejecutar sin importar si la petición falló o no
-        complete: function (xhr, status) {
-            $("#mensajes").html("Obteniendo listado de bicis...");
-            $("#mensajes").hide(1000);
-        }
-    });
-}
+            // código a ejecutar si la petición falla;
+            // son pasados como argumentos a la función
+            // el objeto de la petición en crudo y código de estatus de la petición
+            error: function (xhr, status) {
+                $("#mensajes").show(1000);
+                $("#mensajes").html("Error peticion Post..." + status);
+                //$("#mensajes").hide(1000);
+            }
+        });
+    }
 
-function editarRespuesta(items, llaveRegistro) {
-   /*  console.log("Se ejcuto editarRespuesta...")
-    console.log(llaveRegistro)
-    console.log(items[0].startDate)
-    //$("#idEdit").val(items[0].id); */
-    /* items[llaveRegistro].devolutionDate).substr(0,10)
-    items[llaveRegistro].startDate).substr(0, 10)
-    items[llaveRegistro].client.name
-    items[llaveRegistro].cabin.name */
-    $("#startDate").val();
-    $("#devolutionDate").val();
-    $("#client").val("Editar cliente"); 
-    $("#cabin").val("Editar cabaña");
-     
+
+/**
+ * Configura el aspecto de la página para actualizar el registro
+ */
+function activaEditar() {
+    $("#idEdit").hide();
+    $("#editar").show(500);
+    $("#idEdit").focus();
+    $("#nuevo").hide();
+    $("#nuevoRegistro").hide(500)
+    $("#listado").hide(500);
 }
 
 function armaListaCabañas(items) {
@@ -191,7 +199,7 @@ function listarCabañas() {
 
         // código a ejecutar sin importar si la petición falló o no
         complete: function (xhr, status) {
-            $("#mensajes").html("Obteniendo listado de cabañas...");
+            $("#mensajes").html("Obteniendo listado de bicis...");
             $("#mensajes").hide(1000);
         }
     });

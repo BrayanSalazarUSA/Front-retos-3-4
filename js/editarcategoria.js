@@ -17,7 +17,7 @@ function editarRegistro(llaveRegistro) {
 
     $.ajax({
         // la URL para la petición (url: "url al recurso o endpoint")
-        url: "http://localhost:8080/api/Category/all",
+        url: "http://localhost:8080/api/Category/"+llaveRegistro,
 
         // la información a enviar
         // (también es posible utilizar una cadena de datos)
@@ -70,11 +70,13 @@ function editarRegistro(llaveRegistro) {
 */
 function editarRespuesta(items) {
     /* console.log("Items: "+items[0]) */
-    $("#idEdit").val(items[0].id);
-    $("#nameEdit").val(items[0].name);
-    $("#brandEdit").val(items[0].brand);
-    $("#modelEdit").val(items[0].model);
-    $("#categoryEdit").val(items[0].category_id);    
+    $("#idEdit").val(items.id);
+    $("#idEdit").hide()
+    $("#nameEdit").val(items.name);
+    $("#descripcionEdit").val(items.description);
+    $("#modelEdit").val(items.model);
+    $("#categoryEdit").val(items.category_id);   
+    console.log(items.description) 
 }
 
 //Esta función ejecuta la petición asincrona al servidor de Oracle, envia una

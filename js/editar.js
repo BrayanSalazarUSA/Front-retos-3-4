@@ -13,7 +13,7 @@ console.log("Se ejecuto editar...")
 
     $.ajax({
         // la URL para la petición (url: "url al recurso o endpoint")
-        url: "http://localhost:8080/api/Cabin/all" ,
+        url: "http://localhost:8080/api/Cabin/"+llaveRegistro ,
 
         // la información a enviar
         // (también es posible utilizar una cadena de datos)
@@ -59,13 +59,13 @@ console.log("Se ejecuto editar...")
     
 */
 function editarRespuesta(items) {
-    $("#idEdit").val(items[0].id);
-    $("#nameEdit").val(items[0].name);
-    $("#roomEdit").val(items[0].rooms);
-    $("#brandEdit").val(items[0].brand);
-    $("#categoryEdit").val(items[0].id);  
-    $("#descriptionEdit").val(items[0].description);
-    console.log(items[0].description)    
+    $("#idEdit").val(items.id);
+    $("#nameEdit").val(items.name);
+    $("#roomEdit").val(items.rooms);
+    $("#brandEdit").val(items.brand);
+    $("#categoryEdit").val(items.id);  
+    $("#descriptionEdit").val(items.description);
+   
 }
 
 //Esta función ejecuta la petición asincrona al servidor de Oracle, envia una
@@ -84,8 +84,8 @@ console.log("Descripcion: "+$("#descriptionEdit").val())
         
     }
     console.log("Datos que se envian: " + datos.description)
-console.log(typeof datos.id)
-console.log(typeof datos.rooms)
+    console.log(typeof datos.id)
+    console.log(typeof datos.rooms)
     console.log(typeof datos.description)
 
     //convierte el objeto javascript a json antes de agregarlo a los datos de la petición

@@ -81,7 +81,7 @@ function listarRespuesta(items) {
                    <td>${items[i].name}</td>
                    <td>${items[i].email}</td>
                    <td>${items[i].age}</td>
-                   <td id="id-boton"><button id="boton-primary"class="btn btn-primary btn-sm" onclick="editarRegistro(${items[i].id})">Editar</button></td>
+                   <td id="id-boton"><button id="boton-primary"class="btn btn-primary btn-sm" onclick="editarRegistro(${items[i].idClient})">Editar</button></td>
                    <td id="id-boton"><button class="btn btn-dark btn-sm" onclick="borrarRegistro(${items[i].idClient})">Borrar</button></td>
                    </tr>`;
     }

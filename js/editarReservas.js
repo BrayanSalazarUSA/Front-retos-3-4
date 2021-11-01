@@ -1,3 +1,4 @@
+
 /**
  * Invoca peticion WS GET con parametro (id) para recuperar información del registro
  * y pintar información en el formulario de edición
@@ -69,11 +70,11 @@ function editarRespuesta(items) {
     console.log(items.cabin.name)
     console.log(items.client.name)
 
-    $("#idReservation").val(items.idReservation);
-    $("#startDate").val(items.startDate);
-    $("#devolutionDate").val(items.devolutionDate);
-    $("#client").val(items.client.name);
-    $("#cabin").val(items.cabin);
+    $("#idReservation2").val(items.idReservation);
+    $("#startDate2").val(items.startDate.substr(0, 10));
+    $("#devolutionDate2").val(items.devolutionDate.substr(0, 10));
+    $("#client2").val(items.client.name);
+    $("#cabin2").val(items.cabin);
 }
 
 //Esta función ejecuta la petición asincrona al servidor de Oracle, envia una
@@ -82,12 +83,13 @@ function actualizar() {
 
     //crea un objeto javascript
     let datos = {
-        idReservation: $("#idReservation").val(),
-        startDate :$("#startDate").val(),
-        devolutionDate :$("#devolutionDate").val(),
-        client:{"idClient":$("#client").val()},
-        cabin:{"id":$("#cabin").val()}
+        idReservation: $("#idReservation2").val(),
+        startDate :$("#startDate2").val(),
+        devolutionDate :$("#devolutionDate2").val(),
+        client:{"idClient":$("#client2").val()},
+        cabin:{"id":$("#cabin2").val()}
     }
+    
 
     //convierte el objeto javascript a json antes de agregarlo a los datos de la petición
     let datosPeticion = JSON.stringify(datos);
@@ -160,7 +162,7 @@ function armaListaCabañas(items) {
     }
 
     //accede al elemento con id 'listado' y adiciona la tabla de datos a su html
-    $("#cabin").html(lista);
+    $("#cabin2").html(lista);
 }
 
 function listarCabañas() {
@@ -187,6 +189,63 @@ function listarCabañas() {
 
             //recibe el arreglo 'items' de la respuesta a la petición
             armaListaCabañas(respuesta);
+        },
+
+        // código a ejecutar si la petición falla;
+        // son pasados como argumentos a la función
+        // el objeto de la petición en crudo y código de estatus de la petición
+        error: function (xhr, status) {
+            $("#mensajes").html("Ocurrio un problema al ejecutar la petición..." + status);
+            //$("#mensajes").hide(1000);
+        },
+
+        // código a ejecutar sin importar si la petición falló o no
+        complete: function (xhr, status) {
+            $("#mensajes").html("Obteniendo listado de bicis...");
+            $("#mensajes").hide(1000);
+        }
+    });
+}
+
+function armaListaClientes(items) {
+    $("#listado").html("");
+    $("#listado").show(500);
+    //define variable javascript con la definicion inicial de la tabla, la primera fila y los
+    //encabezados o títulos de la tabla
+    var lista = ` <option value="">--Selecciona un Cliente--</option>`;
+                  
+    //recorre el arreglo de 'items' y construye dinamicamente la fila de datos de la tabla
+    for (var i=0; i < items.length; i++) {
+        lista +=`<option value="${items[i].idClient}">${items[i].name}</option>`;
+    }
+
+    //accede al elemento con id 'listado' y adiciona la tabla de datos a su html
+    $("#client2").html(lista);
+}
+function listarClientes() {
+    $.ajax({
+        // la URL para la petición (url: "url al recurso o endpoint")
+        url: "http://localhost:8080/api/Client/all",
+        
+        // la información a enviar
+        // (también es posible utilizar una cadena de datos)
+        //si el metodo del servicio recibe datos, es necesario definir el parametro adicional
+        //data : { id : 1, ...},
+
+        // especifica el tipo de petición http: POST, GET, PUT, DELETE
+        type: 'GET',
+
+        // el tipo de información que se espera de respuesta
+        dataType: 'json',
+
+        // código a ejecutar si la petición es satisfactoria;
+        // la respuesta es pasada como argumento a la función
+        success: function (respuesta) {
+            //escribe en la consola del desarrollador para efectos de depuración
+            //console.log(respuesta);
+
+            //recibe el arreglo 'items' de la respuesta a la petición
+            armaListaClientes(respuesta);
         },
 
         // código a ejecutar si la petición falla;

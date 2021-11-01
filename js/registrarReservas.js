@@ -71,17 +71,17 @@ function activaNuevo(){
     $("#editar").hide();
     $("#nuevoRegistro").hide(500)
     $("#listado").hide(500);
-    listarClientes();
-    listarCabañas();
+    listarClientes_registrar();
+    listarCabañas_registrar();
 }
 
-function armaListaClientes(items) {
+function armaListaClientes_registrar(items) {
     $("#listado").html("");
     $("#listado").show(500);
     //define variable javascript con la definicion inicial de la tabla, la primera fila y los
     //encabezados o títulos de la tabla
     var lista = ` <option value="">--Selecciona un Cliente--</option>`;
-                  
+                  console.log(items)
     //recorre el arreglo de 'items' y construye dinamicamente la fila de datos de la tabla
     for (var i=0; i < items.length; i++) {
         lista +=`<option value="${items[i].idClient}">${items[i].name}</option>`;
@@ -91,7 +91,7 @@ function armaListaClientes(items) {
     $("#client").html(lista);
 }
 
-function listarClientes() {
+function listarClientes_registrar() {
     $.ajax({
         // la URL para la petición (url: "url al recurso o endpoint")
         url: "http://localhost:8080/api/Client/all",
@@ -114,7 +114,7 @@ function listarClientes() {
             //console.log(respuesta);
 
             //recibe el arreglo 'items' de la respuesta a la petición
-            armaListaClientes(respuesta);
+            armaListaClientes_registrar(respuesta);
         },
 
         // código a ejecutar si la petición falla;
@@ -127,14 +127,14 @@ function listarClientes() {
 
         // código a ejecutar sin importar si la petición falló o no
         complete: function (xhr, status) {
-            $("#mensajes").html("Obteniendo listado de bicis...");
+            $("#mensajes").html("Obteniendo listado de cabañas...");
             $("#mensajes").hide(1000);
         }
     });
 }
 
 
-function armaListaCabañas(items) {
+function armaListaCabañas_registrar(items) {
     $("#listado").html("");
     $("#listado").show(500);
     //define variable javascript con la definicion inicial de la tabla, la primera fila y los
@@ -150,7 +150,7 @@ function armaListaCabañas(items) {
     $("#cabin").html(lista);
 }
 
-function listarCabañas() {
+function listarCabañas_registrar() {
     $.ajax({
         // la URL para la petición (url: "url al recurso o endpoint")
         url: "http://localhost:8080/api/Cabin/all",
@@ -173,7 +173,7 @@ function listarCabañas() {
             //console.log(respuesta);
 
             //recibe el arreglo 'items' de la respuesta a la petición
-            armaListaCabañas(respuesta);
+            armaListaCabañas_registrar(respuesta);
         },
 
         // código a ejecutar si la petición falla;

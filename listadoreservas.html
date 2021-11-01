@@ -72,27 +72,26 @@
         <h4>Editar Reservas</h4>
         <div class="mb-3" id="formulario">
             <div class="mb-3">
-                <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  id="startDate" placeholder="YYYY-MM-DD">
+                <input type="hidden" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  id="idReservation2" placeholder="YYYY-MM-DD">
+
+                <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  id="startDate2" placeholder="YYYY-MM-DD">
          
-            <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  id="devolutionDate" placeholder="YYYY-MM-DD">
+            <input type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"  id="devolutionDate2" placeholder="YYYY-MM-DD">
         
-            <select id="client"  class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Cliente">
+            <select id="client2" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Cliente">
                 
             </select>
          
-            <select id="cabin"  class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Cabaña">
+            <select id="cabin2" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Cabaña">
                 
             </select>
             </div>
-         
-           <!-- <div class="mb-3">
-            <button class="btn btn-primary btn-sm" onclick="registrar();">Guardar</button>
-            <button class="btn btn-dark btn-sm" onclick="estadoInicial();">Cancelar</button>
-           </div>  -->               
+                      
         </div>
         <button onclick="actualizar();" class="btn btn-primary btn-sm">Guardar</button>
         <button onclick="estadoInicial();" class="btn btn-dark btn-sm" >Cancelar</button>
-    </div>
+    </div> 
+    
 </body>
 
 </html>
